@@ -2,23 +2,17 @@
 export const config = { runtime: 'edge' };
 
 export default async function handler(request) {
-  const url = new URL(request.url);
-  const path = url.pathname.replace('/api/moonshot', '') || '/chat/completions';
-  
-  const targetUrl = `https://api.moonshot.cn/v1${path}`;
-  
-  // 从原始请求复制必要的 headers
-  const newHeaders = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${process.env.MOONSHOT_API_KEY}`,
-  };
+  const targetUrl = 'https://api.moonshot.cn/v1/chat/completions';
   
   try {
-    const body = request.method !== 'GET' ? await request.text() : undefined;
+    const body = await request.text();
     
     const response = await fetch(targetUrl, {
-      method: request.method,
-      headers: newHeaders,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.MOONSHOT_API_KEY}`,
+      },
       body: body,
     });
     
@@ -29,6 +23,8 @@ export default async function handler(request) {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       },
     });
   } catch (error) {
