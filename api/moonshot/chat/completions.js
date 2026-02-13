@@ -1,36 +1,33 @@
-// Vercel Serverless Function - 代理 Moonshot API
-export const config = { runtime: 'edge' };
+export default async function handler(req, res) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    return res.status(200).end();
+  }
 
-export default async function handler(request) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const targetUrl = 'https://api.moonshot.cn/v1/chat/completions';
-  
+
   try {
-    const body = await request.text();
-    
     const response = await fetch(targetUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.MOONSHOT_API_KEY}`,
       },
-      body: body,
+      body: JSON.stringify(req.body),
     });
-    
-    const data = await response.text();
-    
-    return new Response(data, {
-      status: response.status,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    });
+
+    const data = await response.json();
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.status(response.status).json(data);
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    res.status(500).json({ error: error.message });
   }
 }
