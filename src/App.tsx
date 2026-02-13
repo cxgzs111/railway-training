@@ -160,8 +160,7 @@ export default function App() {
     try {
       // Step 1: Generate all local analyses + questions (batch async to avoid blocking UI)
       const localResults: Map<string, { analysis: AnalysisResult; questions: Report['questions'] }> = new Map();
-      const totalSteps = aiEnabled ? persons.length * 2 : persons.length; // local + AI
-      setBatchProgress({ total: totalSteps, completed: 0, currentGroup: '正在准备数据…', failed: 0 });
+      setBatchProgress({ total: persons.length, completed: 0, currentGroup: '正在准备数据…', failed: 0 });
       setAiLoading(true);
       const BATCH_SIZE = 20;
       for (let i = 0; i < persons.length; i++) {
@@ -171,15 +170,13 @@ export default function App() {
         const questions = matchQuestions(p, questionBanks);
         localResults.set(`${p.name}__${p.fleet}`, { analysis, questions });
         if ((i + 1) % BATCH_SIZE === 0 || i === persons.length - 1) {
-          setBatchProgress({ total: totalSteps, completed: i + 1, currentGroup: '正在准备数据…', failed: 0 });
+          setBatchProgress({ total: persons.length, completed: 0, currentGroup: `正在准备数据 ${i + 1}/${persons.length}`, failed: 0 });
           await new Promise(resolve => setTimeout(resolve, 0));
         }
       }
 
       // Step 2: If AI enabled, batch generate risk/suggestions with grouping + concurrency
       if (aiEnabled) {
-        const baseCompleted = persons.length; // local analysis already done
-
         const pairs = persons.map(p => ({
           person: p,
           analysis: localResults.get(`${p.name}__${p.fleet}`)!.analysis,
@@ -188,8 +185,8 @@ export default function App() {
         const aiResults = await generateAIBatch(
           pairs,
           (progress) => setBatchProgress({
-            total: totalSteps,
-            completed: baseCompleted + progress.completed,
+            total: persons.length,
+            completed: progress.completed,
             currentGroup: progress.currentGroup,
             failed: progress.failed,
           }),
