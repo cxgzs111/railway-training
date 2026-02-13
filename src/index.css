@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', sans-serif; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+.upload-zone { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+.upload-zone:hover { transform: translateY(-2px); box-shadow: 0 8px 25px -5px rgba(0,51,102,0.15); }
+.upload-zone.uploaded { border-color: #22c55e !important; background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important; }
+
+.btn-railway { background: linear-gradient(135deg, #003366, #1a5eb0); transition: all 0.3s; color: white; }
+.btn-railway:hover { background: linear-gradient(135deg, #002855, #003366); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,51,102,0.4); }
+.btn-railway:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-danger { background: linear-gradient(135deg, #CC0000, #FF4444); color: white; }
+.btn-danger:hover { background: linear-gradient(135deg, #990000, #CC0000); }
+
+.glass-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); }
+.hero-overlay { background: linear-gradient(135deg, rgba(0,26,51,0.92) 0%, rgba(0,51,102,0.85) 50%, rgba(26,94,176,0.78) 100%); }
+
+.stat-card { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); }
+.stat-card:hover { background: linear-gradient(135deg, #e8f0fe 0%, #c4d6f5 100%); }
+
+.data-table { border-collapse: separate; border-spacing: 0; }
+.data-table thead th { position: sticky; top: 0; z-index: 10; }
+.data-table tbody tr { transition: background-color 0.15s; }
+.data-table tbody tr:hover { background-color: #e8f0fe; }
+
+.tag-pill { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 12px; font-weight: 500; }
+
+.person-chip { transition: all 0.2s; cursor: pointer; }
+.person-chip:hover { background-color: #e8f0fe; border-color: #003366; }
+.person-chip.active { background-color: #003366; color: white; border-color: #003366; }
+
+.tab-active { color: #003366; border-bottom-color: #003366; font-weight: 600; }
+
+.report-preview { max-height: 600px; overflow-y: auto; }
+.report-preview h2 { color: #003366; border-bottom: 2px solid #003366; padding-bottom: 6px; }
+.report-preview h3 { color: #1a5eb0; }
+.report-preview table { font-size: 13px; }
+
+.modal-overlay { background: rgba(0,20,40,0.6); backdrop-filter: blur(4px); }
+
+.toast-enter { animation: toastIn 0.4s ease-out; }
+.toast-exit { animation: toastOut 0.3s ease-in forwards; }
+@keyframes toastIn { from { opacity:0; transform:translateX(100px); } to { opacity:1; transform:translateX(0); } }
+@keyframes toastOut { from { opacity:1; transform:translateX(0); } to { opacity:0; transform:translateX(100px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { 0% { opacity:0 } 100% { opacity:1 } }
+@keyframes slideUp { 0% { opacity:0; transform:translateY(20px) } 100% { opacity:1; transform:translateY(0) } }
+
+.animate-fade-in { animation: fadeIn 0.5s ease-out; }
+.section-enter { animation: slideUp 0.5s ease-out; }
+.loading-spinner { border: 3px solid #e8f0fe; border-top-color: #003366; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
